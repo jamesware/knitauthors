@@ -1,0 +1,25 @@
+Package: knitauthors
+Type: Package
+Title: Format authors and affiliations for knitr markdown files
+Version: 0.0.1
+Date: 2015-08-20
+Authors@R: 
+    c(
+    person("James","Ware",email="j.ware@imperial.ac.uk",role=c("aut","cre")),
+    person("Jason","Homsy",email="jhomsy@genetics.med.harvard.edu",role="aut")
+    )
+Maintainer: James Ware <j.ware@imperial.ac.uk>
+Description: knitauthors compiles authors and institutional affiliations and
+  numbers and formats them ready for inclusion in a (scientific) manuscript.
+  During manuscript drafting and revision it may be necessary to add authors
+  to a manuscript, requiring that the entire author list needs to be renumbered:
+  which can in turn prove labour-intensive and error-prone.
+License: GPL-3
+Depends: 
+    R (>= 3.1.0)
+Imports: 
+    dplyr (>= 0.3)
+Suggests: 
+    knitr (>= 1.6)
+VignetteBuilder: knitr
+LazyData: true
