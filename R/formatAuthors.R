@@ -1,27 +1,35 @@
 #' format authors
 
-#' @param authorTable the input data
+#' @param authorTable Input data. A data.frame with columns entitled "Name" and "Affiliation", and upto 5 optional columns labelled "info1" .. "info5". An example is included in the package (exampleInput).  Expects 1 row for each unique author / affiliation pair (i.e. 2 rows for an author with 2 affiliations).  Rows should be ordered to reflect intended authorship order.
+#' @param infoSymbol[n] the superscript symbol chosen to represent each supplementary designation.  Note that some symbols may require additional escape characters for correct interpretation by markdown.
+#' @param infoText[n] description of supplementary designation (e.g. Corresponding author)
 #'   
 #' @return Returns markdown-formatted text
 #' @export formatAuthors
 #' @import dplyr
 #'   
 #' @examples
-#' authorTable <- read.delim("data-raw/authors.tab", sep="\t",)
-#' knitauthors::formatAuthors(authorTable)
+#' # display internal example input format
+#' exampleInput
+#' 
+#' # number author affiliations
+#' formatAuthors(exampleInput)
 #' 
 #' 
 #' 
 formatAuthors <- function(authorTable,
-                          firstSymbol="\\*",
-                          lastSymbol="†",
-                          corrSymbol="\\§",
-                          coFirstText="These authors contributed equally to this work",
-                          coLastText="These authors contributed equally to this work",
-                          corrAuthorText="Corresponding author"
+                          infoSymbol1="\\*",
+                          infoSymbol2="†",
+                          infoSymbol3="§",
+                          infoSymbol4="‡",
+                          infoSymbol5="#",
+                          infoText1="These authors contributed equally to this work",
+                          infoText2="These authors contributed equally to this work",
+                          infoText3="Corresponding author",
+                          infoText4="Did not contribute much",
+                          infoText5="Can't read or write"
 ){
-  # other useful symbols: ‡, #
-  
+  # authorTable <- exampleInput #for line-by-line testing
   authors <- unique(authorTable$Name)
   affiliations <- unique(authorTable$Affiliation)
   
@@ -39,27 +47,40 @@ formatAuthors <- function(authorTable,
     matched_affiliations <- which(matched_affiliations == TRUE)
     affiliation_numbers <- paste(matched_affiliations, collapse=",")
     
-    # add coFirst designation
-    if("coFirst" %in% names(authorTable)){
-      if(sum(authorTable$coFirst[authorTable$Name==i],na.rm=T)>0){
-        affiliation_numbers <-  paste(affiliation_numbers, firstSymbol, sep=",")
+    for (j in 1:5){
+      if(ncol(authorTable) >= j+2
+         & 
+         sum(authorTable[authorTable$Name==i,j+2],na.rm=T)>0
+         ){
+        affiliation_numbers <-  paste(affiliation_numbers,
+                                      c(infoSymbol1,infoSymbol2,infoSymbol3,infoSymbol4,infoSymbol5)[j],
+                                      sep=",")
       }
-    }
-    
-    # add coLast designation
-    if("coLast" %in% names(authorTable)){
-      if(sum(authorTable$coLast[authorTable$Name==i],na.rm=T)>0){
-        affiliation_numbers <-  paste(affiliation_numbers, lastSymbol, sep=",")
       }
-    }
     
-    # add corresponding author designation
-    if("corresponding" %in% names(authorTable)){
-      if(sum(authorTable$corresponding[authorTable$Name==i],na.rm=T)>0){
-        affiliation_numbers <-  paste(affiliation_numbers, corrSymbol, sep=",")
-      }
-    }
-    
+#     
+#     
+#     # add coFirst designation
+#     if("coFirst" %in% names(authorTable)){
+#       if(sum(authorTable$coFirst[authorTable$Name==i],na.rm=T)>0){
+#         affiliation_numbers <-  paste(affiliation_numbers, infoSymbol1, sep=",")
+#       }
+#     }
+#     
+#     # add coLast designation
+#     if("coLast" %in% names(authorTable)){
+#       if(sum(authorTable$coLast[authorTable$Name==i],na.rm=T)>0){
+#         affiliation_numbers <-  paste(affiliation_numbers, infoSymbol2, sep=",")
+#       }
+#     }
+#     
+#     # add corresponding author designation
+#     if("corresponding" %in% names(authorTable)){
+#       if(sum(authorTable$corresponding[authorTable$Name==i],na.rm=T)>0){
+#         affiliation_numbers <-  paste(affiliation_numbers, infoSymbol3, sep=",")
+#       }
+#     }
+#     
     Name_output_add <- paste(i, "^", affiliation_numbers, "^", sep="")
     Name_output <- append(Name_output, Name_output_add)
   }
@@ -78,12 +99,17 @@ formatAuthors <- function(authorTable,
   cat(affiliations_list, sep="  \n")
   cat("\n")
   if("coFirst" %in% names(authorTable)){
-    cat(firstSymbol,coFirstText,"  \n",sep="")
+    cat(infoSymbol1,infoText1,"  \n",sep="")
   }
   if("coLast" %in% names(authorTable)){
-    cat(lastSymbol,coLastText,"  \n",sep="")
+    cat(infoSymbol2,infoText2,"  \n",sep="")
   }
   if("corresponding" %in% names(authorTable)){
-    cat(corrSymbol,corrAuthorText,"  \n",sep="")
+    cat(infoSymbol3,infoText3,"  \n",sep="")
   }
 }
+
+
+# c(info1,info2,info3,info4,info5)[i]
+# c(infoSymbol1,infoSymbol2,infoSymbol3,infoSymbol4,infoSymbol5)[i]
+# c(infoText1,infoText2,infoText3,infoText4,infoText5)[i]
