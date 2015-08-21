@@ -21,7 +21,7 @@ View example data
 exampleInput
 ```
 
-Run format authors
+Run format authors.  If you are calling the function within a knitr code chunk, specify `results="asis"` in the chunk header
 
 ```{r, results="asis"}
 formatAuthors(exampleInput)
