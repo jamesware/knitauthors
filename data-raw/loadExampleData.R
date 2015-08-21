@@ -1,2 +1,2 @@
 exampleInput <- read.delim("data-raw/authors.tab", sep="\t",)
-devtools::use_data(exampleInput)
+devtools::use_data(exampleInput, overwrite=T)
