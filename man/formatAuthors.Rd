@@ -4,14 +4,19 @@
 \alias{formatAuthors}
 \title{format authors}
 \usage{
-formatAuthors(authorTable, firstSymbol = "\\\\*", lastSymbol = "†",
-  corrSymbol = "\\\\§",
-  coFirstText = "These authors contributed equally to this work",
-  coLastText = "These authors contributed equally to this work",
-  corrAuthorText = "Corresponding author")
+formatAuthors(authorTable, infoSymbol1 = "\\\\*", infoSymbol2 = "†",
+  infoSymbol3 = "§", infoSymbol4 = "‡", infoSymbol5 = "#",
+  infoText1 = "These authors contributed equally to this work",
+  infoText2 = "These authors contributed equally to this work",
+  infoText3 = "Corresponding author", infoText4 = "Did not contribute much",
+  infoText5 = "Can't read or write")
 }
 \arguments{
-\item{authorTable}{the input data}
+\item{authorTable}{Input data. A data.frame with columns entitled "Name" and "Affiliation", and upto 5 optional columns labelled "info1" .. "info5". An example is included in the package (exampleInput).  Expects 1 row for each unique author / affiliation pair (i.e. 2 rows for an author with 2 affiliations).  Rows should be ordered to reflect intended authorship order.}
+
+\item{infoSymbol[n]}{the superscript symbol chosen to represent each supplementary designation.  Note that some symbols may require additional escape characters for correct interpretation by markdown.}
+
+\item{infoText[n]}{description of supplementary designation (e.g. Corresponding author)}
 }
 \value{
 Returns markdown-formatted text
@@ -20,7 +25,10 @@ Returns markdown-formatted text
 format authors
 }
 \examples{
-authorTable <- read.delim("data-raw/authors.tab", sep="\\t",)
-knitauthors::formatAuthors(authorTable)
+# display internal example input format
+exampleInput
+
+# number author affiliations
+formatAuthors(exampleInput)
 }
 
