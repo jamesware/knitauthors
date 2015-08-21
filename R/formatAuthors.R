@@ -81,7 +81,7 @@ formatAuthors <- function(authorTable,
   # Other designations
   if(ncol(authorTable) > 2){
     for (j in seq(1,ncol(authorTable)-2)){
-      cat(c(infoSymbol1,infoSymbol2,infoSymbol3,infoSymbol4,infoSymbol5)[j],
+      cat("^",c(infoSymbol1,infoSymbol2,infoSymbol3,infoSymbol4,infoSymbol5)[j],"^",
           c(infoText1,infoText2,infoText3,infoText4,infoText5)[j],
           "  \n",sep="")
     }
