@@ -42,45 +42,24 @@ formatAuthors <- function(authorTable,
     matched_affiliations <- sapply(affiliations,
                                    function(x) {
                                      if (x %in% test) {1} else {0}
-                                     }
-                                   )
+                                   }
+    )
     matched_affiliations <- which(matched_affiliations == TRUE)
     affiliation_numbers <- paste(matched_affiliations, collapse=",")
     
+    # Add additional designations (info1 .. info5)
     for (j in 1:5){
       if(ncol(authorTable) >= j+2
          & 
-         sum(authorTable[authorTable$Name==i,j+2],na.rm=T)>0
-         ){
+           sum(authorTable[authorTable$Name==i,j+2],na.rm=T)>0
+      ){
         affiliation_numbers <-  paste(affiliation_numbers,
                                       c(infoSymbol1,infoSymbol2,infoSymbol3,infoSymbol4,infoSymbol5)[j],
                                       sep=",")
       }
-      }
+    }
     
-#     
-#     
-#     # add coFirst designation
-#     if("coFirst" %in% names(authorTable)){
-#       if(sum(authorTable$coFirst[authorTable$Name==i],na.rm=T)>0){
-#         affiliation_numbers <-  paste(affiliation_numbers, infoSymbol1, sep=",")
-#       }
-#     }
-#     
-#     # add coLast designation
-#     if("coLast" %in% names(authorTable)){
-#       if(sum(authorTable$coLast[authorTable$Name==i],na.rm=T)>0){
-#         affiliation_numbers <-  paste(affiliation_numbers, infoSymbol2, sep=",")
-#       }
-#     }
-#     
-#     # add corresponding author designation
-#     if("corresponding" %in% names(authorTable)){
-#       if(sum(authorTable$corresponding[authorTable$Name==i],na.rm=T)>0){
-#         affiliation_numbers <-  paste(affiliation_numbers, infoSymbol3, sep=",")
-#       }
-#     }
-#     
+    
     Name_output_add <- paste(i, "^", affiliation_numbers, "^", sep="")
     Name_output <- append(Name_output, Name_output_add)
   }
@@ -98,18 +77,14 @@ formatAuthors <- function(authorTable,
   cat("\n\n")
   cat(affiliations_list, sep="  \n")
   cat("\n")
-  if("coFirst" %in% names(authorTable)){
-    cat(infoSymbol1,infoText1,"  \n",sep="")
+  
+  # Other designations
+  if(ncol(authorTable) > 2){
+    for (j in seq(1,ncol(authorTable)-2)){
+      cat(c(infoSymbol1,infoSymbol2,infoSymbol3,infoSymbol4,infoSymbol5)[j],
+          c(infoText1,infoText2,infoText3,infoText4,infoText5)[j],
+          "  \n",sep="")
+    }
   }
-  if("coLast" %in% names(authorTable)){
-    cat(infoSymbol2,infoText2,"  \n",sep="")
-  }
-  if("corresponding" %in% names(authorTable)){
-    cat(infoSymbol3,infoText3,"  \n",sep="")
-  }
+  
 }
-
-
-# c(info1,info2,info3,info4,info5)[i]
-# c(infoSymbol1,infoSymbol2,infoSymbol3,infoSymbol4,infoSymbol5)[i]
-# c(infoText1,infoText2,infoText3,infoText4,infoText5)[i]
